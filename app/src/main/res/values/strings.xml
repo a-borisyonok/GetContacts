@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Home Task 3</string>
+    <string name="show_notification_string">Показать в Notification</string>
+    <string name="show_from_sp_string">Показать из SP</string>
+    <string name="show_contacts_string">Показать контакты</string>
+    <string name="choose_contact_string">Выбрать контакт</string>
 </resources>

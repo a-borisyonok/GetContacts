@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ButtonText" parent="Theme.HomeTask3">
+        <item name="android:textSize">28sp</item>
+        <item name="fontFamily">sans-serif-thin</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">100dp</item>
+    </style>
+</resources>

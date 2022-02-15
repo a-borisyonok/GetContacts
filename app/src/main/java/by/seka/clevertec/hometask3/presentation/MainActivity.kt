@@ -1,7 +1,8 @@
-package by.seka.clevertec.hometask3
+package by.seka.clevertec.hometask3.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import by.seka.clevertec.hometask3.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
