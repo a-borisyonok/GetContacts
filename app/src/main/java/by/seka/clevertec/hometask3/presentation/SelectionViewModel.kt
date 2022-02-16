@@ -8,9 +8,13 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
-class SelectionViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
+class SelectionViewModel @Inject constructor(
+    private val repository: Repository
+) : ViewModel() {
 
-    fun getContacts() : Flow<List<Contact>>{
-       return repository.getAll()
+    fun getContacts(): Flow<List<Contact>> {
+        return repository.getAll()
     }
+
+    suspend fun addContact(contact: Contact) = repository.add(contact)
 }

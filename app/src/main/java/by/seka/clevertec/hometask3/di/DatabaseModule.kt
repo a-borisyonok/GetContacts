@@ -2,8 +2,8 @@ package by.seka.clevertec.hometask3.di
 
 import android.content.Context
 import androidx.room.Room
-import by.seka.clevertec.hometask3.data.ContactsDB
-import by.seka.clevertec.hometask3.data.ContactsDao
+import by.seka.clevertec.hometask3.data.local.ContactsDB
+import by.seka.clevertec.hometask3.data.local.ContactsDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
