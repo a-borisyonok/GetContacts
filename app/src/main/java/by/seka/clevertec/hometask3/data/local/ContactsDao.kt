@@ -15,4 +15,7 @@ interface ContactsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun add(contact: Contact)
+
+    @Query("SELECT number FROM contacts")
+    suspend fun getNumbers(): List<String>
 }

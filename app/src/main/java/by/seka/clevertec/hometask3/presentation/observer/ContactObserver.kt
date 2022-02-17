@@ -17,16 +17,20 @@ class ContactObserver(
     private val registry: ActivityResultRegistry,
     private val context: Context
 ) : DefaultLifecycleObserver {
-    lateinit var getContactInfo: ActivityResultLauncher<Void>
+
+    private var getContactInfo: ActivityResultLauncher<Void>? = null
 
     val contact = MutableSharedFlow<Contact>()
+
     override fun onCreate(owner: LifecycleOwner) {
+
         var phone = EMPTY_STRING
         var firstName = EMPTY_STRING
         var lastName = EMPTY_STRING
         var email = EMPTY_STRING
 
         getContactInfo = registry.register("key", owner, ActivityResultContracts.PickContact()) {
+
             var displayName = EMPTY_STRING
 
             it?.also { contactUri ->
@@ -123,7 +127,7 @@ class ContactObserver(
 
 
     fun selectImage() {
-        getContactInfo.launch(null)
+        getContactInfo?.launch(null)
 
     }
 }

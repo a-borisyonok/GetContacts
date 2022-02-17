@@ -17,4 +17,8 @@ class SelectionViewModel @Inject constructor(
     }
 
     suspend fun addContact(contact: Contact) = repository.add(contact)
+
+   suspend fun getNumbersList(): List<String> {
+        return repository.getNumbersList()
+    }
 }

@@ -5,13 +5,17 @@ import by.seka.clevertec.hometask3.domain.model.Contact
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class Repository @Inject constructor (private val dao: ContactsDao){
+class Repository @Inject constructor(private val dao: ContactsDao) {
 
-   fun getAll(): Flow<List<Contact>> {
+    fun getAll(): Flow<List<Contact>> {
         return dao.getAll()
     }
 
-    suspend fun add(contact: Contact){
+    suspend fun add(contact: Contact) {
         dao.add(contact)
+    }
+
+   suspend fun getNumbersList(): List<String> {
+        return dao.getNumbers()
     }
 }

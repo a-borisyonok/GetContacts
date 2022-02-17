@@ -8,5 +8,8 @@
 
     <string name="save_successful">Сохранение успешно!</string>
 
+    <string name="no_entries">Нет записей</string>
+    <string name="select_contact">Выберите контакт</string>
+
 
 </resources>
