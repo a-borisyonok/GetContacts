@@ -10,6 +10,9 @@
 
     <string name="no_entries">Нет записей</string>
     <string name="select_contact">Выберите контакт</string>
+    <string name="saved_contact">Сохраненный контакт</string>
+    <string name="phone_number">Телефон:</string>
+    <string name="email">E-mail:</string>
 
 
 </resources>

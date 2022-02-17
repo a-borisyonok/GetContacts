@@ -2,6 +2,7 @@ package by.seka.clevertec.hometask3.presentation.observer
 
 import android.content.Context
 import android.provider.ContactsContract
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContracts
@@ -42,6 +43,7 @@ class ContactObserver(
                     null, null
                 )?.apply {
                     moveToFirst()
+                    Log.i("##", getString(0))
                     displayName = getString(0) ?: EMPTY_STRING
                     close()
                 }
@@ -58,7 +60,7 @@ class ContactObserver(
                         ) {
                             phone =
                                 getString(
-                                    getColumnIndex(ContactsContract.CommonDataKinds.Phone.NORMALIZED_NUMBER)
+                                    getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
                                         ?: 0
                                 ) ?: EMPTY_STRING
 
@@ -125,9 +127,7 @@ class ContactObserver(
         }
     }
 
-
     fun selectImage() {
         getContactInfo?.launch(null)
-
     }
 }

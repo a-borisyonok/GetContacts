@@ -18,4 +18,7 @@ interface ContactsDao {
 
     @Query("SELECT number FROM contacts")
     suspend fun getNumbers(): List<String>
+
+    @Query("SELECT * FROM contacts WHERE number=:number")
+    suspend fun getContact(number: String): Contact
 }

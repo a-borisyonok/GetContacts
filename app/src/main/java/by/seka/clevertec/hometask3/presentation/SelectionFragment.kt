@@ -2,12 +2,16 @@ package by.seka.clevertec.hometask3.presentation
 
 import android.Manifest
 import android.app.AlertDialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -15,12 +19,11 @@ import by.seka.clevertec.hometask3.R
 import by.seka.clevertec.hometask3.data.preferences.ContactPreferences
 import by.seka.clevertec.hometask3.databinding.SelectionFragmentBinding
 import by.seka.clevertec.hometask3.presentation.observer.ContactObserver
-import by.seka.clevertec.hometask3.util.CONTACTS_READ_REQ_CODE
-import by.seka.clevertec.hometask3.util.hasPermission
-import by.seka.clevertec.hometask3.util.requestPermissionWithRationale
+import by.seka.clevertec.hometask3.util.*
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
@@ -48,6 +51,7 @@ class SelectionFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = SelectionFragmentBinding.inflate(inflater, container, false)
+        createChannel()
         return binding.root
     }
 
@@ -73,8 +77,29 @@ class SelectionFragment : Fragment() {
             }
 
             showNotification.setOnClickListener {
-
+                showContactInNotification()
             }
+        }
+    }
+
+    private fun createChannel() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                CHANNEL_ID,
+                context?.getString(R.string.saved_contact),
+
+                NotificationManager.IMPORTANCE_HIGH
+            )
+                .apply {
+                    setShowBadge(false)
+                }
+
+            val notificationManager = requireActivity().getSystemService(
+                NotificationManager::class.java
+            )
+            notificationManager.createNotificationChannel(notificationChannel)
+
         }
     }
 
@@ -105,13 +130,15 @@ class SelectionFragment : Fragment() {
         observer?.selectImage()
         lifecycleScope.launchWhenStarted {
             observer?.contact?.collectLatest {
+
                 if (it.number.isNotEmpty()) {
-                    viewModel.addContact(it)
                     Toast.makeText(
                         context,
                         context?.getText(R.string.save_successful),
                         Toast.LENGTH_SHORT
                     ).show()
+                    delay(500)
+                    viewModel.addContact(it)
                     cancel()
                 }
             }
@@ -121,8 +148,8 @@ class SelectionFragment : Fragment() {
     private fun showSavedContactsDialog() {
         lifecycleScope.launchWhenStarted {
 
-            val dialogTitle = context?.getString(R.string.select_contact).toString()
             val listOfNumbers = viewModel.getNumbersList().toTypedArray()
+            val dialogTitle = context?.getString(R.string.select_contact).toString()
             val dialog = AlertDialog.Builder(context).setTitle(dialogTitle)
 
             if (listOfNumbers.isNotEmpty()) {
@@ -137,6 +164,7 @@ class SelectionFragment : Fragment() {
                     dialogInterface.dismiss()
                 }
                     .show()
+                cancel()
             } else {
                 dialog.setMessage(context?.getString(R.string.no_entries).toString())
                     .setPositiveButton("OK") { dialogInterface, _ -> dialogInterface.dismiss() }
@@ -156,5 +184,41 @@ class SelectionFragment : Fragment() {
             Snackbar.LENGTH_SHORT
         ).setAnchorView(binding.showFromSp)
             .show()
+    }
+
+    private fun showContactInNotification() {
+
+        lifecycleScope.launchWhenStarted {
+            if (sharedPreferences.getContactFromPreferences().isNotEmpty()) {
+
+                val contact =
+                    viewModel.getContact(sharedPreferences.getContactFromPreferences())
+
+                val firstName = contact.firstName
+                val lastName = contact.lastName
+                val number = "${context?.getString(R.string.phone_number)} ${contact.number}"
+                val email = "${context?.getString(R.string.email)} ${contact.email} "
+
+                val notificationManager = ContextCompat.getSystemService(
+                    requireContext(),
+                    NotificationManager::class.java
+                ) as NotificationManager
+
+                notificationManager.sendNotification(
+                    "$firstName $lastName",
+                    "$number \n$email ",
+                    requireContext()
+                )
+                cancel()
+            } else {
+                Snackbar.make(
+                    binding.root,
+                    context?.getString(R.string.no_entries).toString(),
+                    Snackbar.LENGTH_LONG
+                ).setAnchorView(binding.showNotification)
+                    .show()
+                cancel()
+            }
+        }
     }
 }
