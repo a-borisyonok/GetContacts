@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -162,6 +163,7 @@ class SelectionFragment : Fragment() {
                         listOfNumbers[index]
                     )
                     dialogInterface.dismiss()
+                    showSavedInPreferences(listOfNumbers[index])
                 }
                     .show()
                 cancel()
@@ -219,6 +221,20 @@ class SelectionFragment : Fragment() {
                     .show()
                 cancel()
             }
+        }
+    }
+
+    private fun showSavedInPreferences(number: String) {
+        lifecycleScope.launchWhenStarted {
+            val contact = viewModel.getContact(number)
+            val phone = "${context?.getString(R.string.phone_number)} ${contact.number}"
+            val email = "${context?.getString(R.string.email)} ${contact.email} "
+            val contactData = "${contact.firstName} ${contact.lastName}\n$phone\n$email"
+            val snackBar = Snackbar.make(binding.root, contactData, Snackbar.LENGTH_LONG)
+            val view = snackBar.view
+            val textView = view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+            textView.maxLines = 3
+            snackBar.show()
         }
     }
 }
